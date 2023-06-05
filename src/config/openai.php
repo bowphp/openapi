@@ -1,7 +1,7 @@
 <?php
-
 return [
-    'api_key' => getenv('OPENAI_API_KEY'),
-    // Autres options de configuration...
+    'apiKey' => 'their-api-key',
+    'organization' => 'their-organization',
+    'baseUri' => 'https://api.openai.com',
 ];
 

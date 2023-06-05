@@ -1,22 +1,31 @@
 {
-    "name": "bowphp/bow-openai",
+    "name": "bowphp/openai",
     "description": "OpenAI integration for BowPHP",
     "type": "library",
     "license": "MIT",
     "authors": [
         {
-            "name": "gnakale"
-
+            "name": "gnakale",
+            "role": "Bowphp team Member"
         }
     ],
     "require": {
         "php": ">=8.1",
-        "openai-php/client": "^1.0",
-        "guzzlehttp/guzzle": "^7.0"
+        "openai-php/client": "^0.5.2",
+        "symfony/http-client": "^6.3",
+        "nyholm/psr7": "^1.8"
     },
     "autoload": {
         "psr-4": {
-            "BowOpenAI\\": "src/"
+            "Bow\\OpenAI\\": "src/"     
+           }
+    },
+    "require-dev": {
+        "bowphp/framework": "^5.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
         }
     }
 }

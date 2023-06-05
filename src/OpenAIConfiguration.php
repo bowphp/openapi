@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Configurations;
 
@@ -13,26 +13,37 @@ class OpenAIConfiguration extends Configuration
      *
      * @return void
      */
-    public function create(Loader $config)
+    public function create(Loader $config) : void
     {
-        $this->container->bind('openai', function () {
-            $apiKey = getenv('YOUR_API_KEY');
-            return OpenAIClient::client($apiKey);
+        $openai = (array) $config['openai'];
+
+        $openai = array_merge(
+            require __DIR__ . '/config/openai.php',
+            $openai
+        );
+
+        $config['openai'] = $openai;
+
+        $this->container->bind('openai', function () use ($config) {
+            return new OpenAIClient([
+                'apiKey' => $config["openai"]["apiKey"],
+                'organization' => $config["openai"]["organization"],
+                'baseUri' => $config["openai"]["baseUri"],
+            ]);
+        });
+    }
+
+    public function run() : void
+    {
+        $this->container->singleton('openai.completions', function ($prompt, $options = []) {
+            return $this->container->make('openai')->completions()->create(array_merge([
+                'model' => 'text-davinci-003',
+                'prompt' => $prompt
+            ], $options));
+        });
+
+        $this->container->singleton('openai.models', function () {
+            return $this->container->make('openai')->models()->list();
         });
     }
 }
-
-public function run()
-{
-    $this->container->add('openai.php.completions', function ($prompt, $options = []) {
-        return $this->container->make('openai.php')->completions()->create(array_merge([
-            'model' => 'text-davinci-003',
-            'prompt' => $prompt
-        ], $options));
-    });
-
-    $this->container->add('openai.models', function () {
-        return $this->container->make('openai')->models()->list();
-    });
-}
-
