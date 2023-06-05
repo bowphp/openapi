@@ -1,38 +1,48 @@
 <?php 
-namespace Test;
 
-use Bow\Configuration\Loader;
-use PHPUnit\Framework\TestCase;
-use App\Configurations\OpenAIConfiguration;
-
-class OpenAIConfigurationTest extends TestCase
+public function testCreateMethodBindsOpenAIInstanceToContainer()
 {
-    public function testCreateMethodBindsOpenAIInstanceToContainer()
-    {
-        $config = new Loader();
-        $openAIConfig = new OpenAIConfiguration();
-        $openAIConfig->create($config);
+    // Arrange
+    $config = new Loader();
+    $openAIConfig = new OpenAIConfiguration();
+    $config['openai'] = [
+        'apiKey' => 'test-api-key',
+        'organization' => 'test-organization',
+        'baseUri' => 'https://api.openai.com',
+    ];
 
-        $this->assertInstanceOf(
-            'OpenAI\Client',
-            $openAIConfig->getContainer()->make('openai.php')
-        );
-    }
+    // Act
+    $openAIConfig->create($config);
 
-    public function testRunMethodBindsOpenAICompletionsAndModelsToContainer()
-    {
-        $config = new Loader();
-        $openAIConfig = new OpenAIConfiguration();
-        $openAIConfig->create($config);
-        $openAIConfig->run();
+    // Assert
+    $this->assertInstanceOf(
+        'OpenAI\Client',
+        $openAIConfig->getContainer()->make('openai')
+    );
+}
 
-        $this->assertInstanceOf(
-            'OpenAI\API\Completions',
-            $openAIConfig->getContainer()->make('openai.php.completions')
-        );
+public function testRunMethodBindsOpenAICompletionsAndModelsToContainer()
+{
+    // Arrange
+    $config = new Loader();
+    $openAIConfig = new OpenAIConfiguration();
+    $config['openai'] = [
+        'apiKey' => 'test-api-key',
+        'organization' => 'test-organization',
+        'baseUri' => 'https://api.openai.com',
+    ];
+    $openAIConfig->create($config);
 
-        $this->assertIsArray(
-            $openAIConfig->getContainer()->make('openai.php.models')
-        );
-    }
+    // Act
+    $openAIConfig->run();
+
+    // Assert
+    $this->assertInstanceOf(
+        'OpenAI\API\Completions',
+        $openAIConfig->getContainer()->make('openai.completions', ['test-prompt'])
+    );
+
+    $this->assertIsArray(
+        $openAIConfig->getContainer()->make('openai.models')
+    );
 }
