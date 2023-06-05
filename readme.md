@@ -17,12 +17,13 @@ Installation
 
 To include this package via Composer, run the following command:
 
-bash
+```bash
 Copy code
 `composer require bowphp/bow-openai`
 Once the installation is complete, include the service provider within app/Kernel.php.
+```
 
-`php
+```php
 Copy code
 public function configurations(): array
 {
@@ -30,7 +31,8 @@ public function configurations(): array
         ...
         App\Configurations\OpenAIConfiguration::class,
     ];
-}`
+}````
+
 # Configuration
 
 **Setup the OpenAI integration in config/openai.php config.**
@@ -42,7 +44,7 @@ Usage
 
 You can use the OpenAI service in your application like this:
 
-`php
+```php
 Copy code
 $response = $this->container->make('openai.completions', [
     'Translate these English words to French: "{words}"',
@@ -50,9 +52,10 @@ $response = $this->container->make('openai.completions', [
         'max_tokens' => 60,
     ]
 ]);
-Example
-`
-`php
+```
+## Example
+
+```php
 Copy code
 namespace App\Controllers;
 
@@ -71,7 +74,8 @@ class TranslateController extends Controller
 
         return $response;
     }
-}`
+}```
+
 # Maintainers
 
 *gnakale
@@ -93,5 +97,5 @@ Contributing
 * Push to the branch (git push origin my-new-feature)
 * Create new Pull Request
 * License
-##
+
 * OpenAI Integration for BowPHP is open-sourced software licensed under the MIT license.
