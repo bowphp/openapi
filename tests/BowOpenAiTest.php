@@ -1,48 +1,35 @@
-<?php 
+<?php
 
-public function testCreateMethodBindsOpenAIInstanceToContainer()
+use Bow\Container\Capsule;
+use Bow\Testing\KernelTesting;
+
+class BowOpenAiTest extends PHPUnit\Framework\TestCase
 {
-    // Arrange
-    $config = new Loader();
-    $openAIConfig = new OpenAIConfiguration();
-    $config['openai'] = [
-        'apiKey' => 'test-api-key',
-        'organization' => 'test-organization',
-        'baseUri' => 'https://api.openai.com',
-    ];
+    public function testCreateMethodBindsOpenAIInstanceToContainer()
+    {
+        KernelTesting::withConfiguations([OpenAIConfiguration::class]);
+        KernelTesting::configure(__DIR__. "/../src/config");
 
-    // Act
-    $openAIConfig->create($config);
+        // Assert
+        $this->assertInstanceOf(
+            'OpenAI\Client',
+            Capsule::getInstance()->make('openai')
+        );
+    }
 
-    // Assert
-    $this->assertInstanceOf(
-        'OpenAI\Client',
-        $openAIConfig->getContainer()->make('openai')
-    );
-}
+    public function testRunMethodBindsOpenAICompletionsAndModelsToContainer()
+    {
+        KernelTesting::withConfiguations([OpenAIConfiguration::class]);
+        KernelTesting::configure(__DIR__ . "/../src/config");
 
-public function testRunMethodBindsOpenAICompletionsAndModelsToContainer()
-{
-    // Arrange
-    $config = new Loader();
-    $openAIConfig = new OpenAIConfiguration();
-    $config['openai'] = [
-        'apiKey' => 'test-api-key',
-        'organization' => 'test-organization',
-        'baseUri' => 'https://api.openai.com',
-    ];
-    $openAIConfig->create($config);
+        // Assert
+        $this->assertInstanceOf(
+            'OpenAI\API\Completions',
+            Capsule::getInstance()->make('openai.completions', ['test-prompt'])
+        );
 
-    // Act
-    $openAIConfig->run();
-
-    // Assert
-    $this->assertInstanceOf(
-        'OpenAI\API\Completions',
-        $openAIConfig->getContainer()->make('openai.completions', ['test-prompt'])
-    );
-
-    $this->assertIsArray(
-        $openAIConfig->getContainer()->make('openai.models')
-    );
+        $this->assertIsArray(
+            Capsule::getInstance()->make('openai.models')
+        );
+    }
 }

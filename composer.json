@@ -21,11 +21,18 @@
            }
     },
     "require-dev": {
-        "bowphp/framework": "^5.0"
+        "bowphp/framework": "^5.0",
+        "phpunit/phpunit": "^8",
+        "squizlabs/php_codesniffer": "3.*"
     },
     "config": {
         "allow-plugins": {
             "php-http/discovery": true
         }
+    },
+    "scripts": {
+        "phpcbf": "phpcbf --standard=psr12 --severity=4 --tab-width=4 src tests",
+        "phpcs": "phpcs --standard=psr12 --severity=4 --tab-width=4 src",
+        "test": "phpunit --configuration phpunit.dist.xml"
     }
 }
