@@ -18,22 +18,22 @@ Installation
 To include this package via Composer, run the following command:
 
 ```bash
-Copy code
-`composer require bowphp/bow-openai`
-Once the installation is complete, include the service provider within app/Kernel.php.
+composer require bowphp/bow-openai
 ```
+Once the installation is complete, include the service provider within app/Kernel.php.
+
 
 ```php
-Copy code
 public function configurations(): array
 {
     return [
         ...
         App\Configurations\OpenAIConfiguration::class,
     ];
-}````
+}
+```
 
-# Configuration
+## Configuration
 
 **Setup the OpenAI integration in config/openai.php config.**
 
@@ -45,7 +45,6 @@ Usage
 You can use the OpenAI service in your application like this:
 
 ```php
-Copy code
 $response = $this->container->make('openai.completions', [
     'Translate these English words to French: "{words}"',
     [
@@ -56,7 +55,6 @@ $response = $this->container->make('openai.completions', [
 ## Example
 
 ```php
-Copy code
 namespace App\Controllers;
 
 use Bow\Controller\Controller;
@@ -74,11 +72,12 @@ class TranslateController extends Controller
 
         return $response;
     }
-}```
+}
+```
 
-# Maintainers
+## Maintainers
 
-*gnakale
+* gnakale
 
 Thank's collaborators
 
